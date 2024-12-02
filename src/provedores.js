@@ -19,7 +19,7 @@ function ProvidersApp() {
         telefono: '',
         tipo: '',
         direccion: '',
-        ultima_compra: null // Added this field to match server-side requirements
+        ultima_compra: null
     };
 
     const [formData, setFormData] = useState(initialFormState);
@@ -54,9 +54,6 @@ function ProvidersApp() {
     const handleCreate = async (e) => {
         e.preventDefault();
         try {
-            // Log the data being sent to help debug
-            console.log('Creating provider:', formData);
-
             const response = await fetch(API_BASE_URL, {
                 method: 'POST',
                 headers: { 
@@ -104,6 +101,24 @@ function ProvidersApp() {
         }
     };
 
+    const handleDelete = async (providerId) => {
+        if (!window.confirm('¿Está seguro que desea eliminar este proveedor?')) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/${providerId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) throw new Error('Error al eliminar el proveedor');
+            
+            fetchProviders();
+            setError(null);
+        } catch (err) {
+            setError(err.message);
+            console.error('Delete provider error:', err);
+        }
+    };
+
     const openEditModal = (provider) => {
         setCurrentProvider(provider);
         setFormData({
@@ -113,7 +128,7 @@ function ProvidersApp() {
             telefono: provider.telefono,
             tipo: provider.tipo,
             direccion: provider.direccion,
-            ultima_compra: provider.ultima_compra
+            ultima_compra: provider.ultima_compra ? provider.ultima_compra.split('T')[0] : null
         });
         setModalOpen(true);
     };
@@ -136,16 +151,29 @@ function ProvidersApp() {
             cell: (row) => (
                 <div style={{ display: 'flex', gap: '10px' }}>
                     <button onClick={() => openEditModal(row)}>Editar</button>
+                    <button onClick={() => handleDelete(row.id_proveedor)} style={{backgroundColor: 'red', color: 'white'}}>Eliminar</button>
                 </div>
             )
         }
     ];
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
             <h1>Gestión de Proveedores</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button onClick={openCreateModal}>Nuevo Proveedor</button>
+            <button 
+                onClick={openCreateModal} 
+                style={{
+                    backgroundColor: '#4CAF50', 
+                    color: 'white', 
+                    border: 'none', 
+                    padding: '10px 15px', 
+                    borderRadius: '4px', 
+                    marginBottom: '15px'
+                }}
+            >
+                Nuevo Proveedor
+            </button>
             <DataTable
                 columns={columns}
                 data={providers}
