@@ -43,4 +43,4 @@ const Herramientas = () => {
   );
 };
 
-export default DataTableComponent;
+export default Herramientas;

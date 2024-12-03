@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "SENA",
+			"path": "../../../SENA"
+		},
+		{
+			"name": "app",
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}
