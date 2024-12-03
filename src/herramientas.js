@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import $ from "jquery";
-import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "datatables.net";
 
-const DataTableComponent = () => {
+const Herramientas = () => {
   useEffect(() => {
     // Inicializar DataTable
     $("#tablaPrestamos").DataTable();
